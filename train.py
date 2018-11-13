@@ -34,7 +34,7 @@ def _main(config):
             freeze_body=2, weights_path = train_dir + '/tiny_yolo_weights.h5')
     else:
         model = create_model(input_shape, anchors, num_classes,
-            freeze_body=2, weights_path = train_dir + 'yolo_v3_weights.h5') # make sure you know what you freeze
+            freeze_body=2, weights_path = train_dir + '/yolo_v3_weights.h5') # make sure you know what you freeze
 
     logging = TensorBoard(log_dir=log_dir)
     checkpoint = ModelCheckpoint(log_dir + 'ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5',
