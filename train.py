@@ -58,8 +58,6 @@ def _main(config):
             # use custom yolo_loss Lambda layer.
             'yolo_loss': lambda y_true, y_pred: y_pred})
 
-        model.summary()
-
         print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, config.batch_size))
         model.fit_generator(data_generator_wrapper(lines[:num_train], config.batch_size, input_shape, anchors, num_classes),
                 steps_per_epoch=max(1, num_train//config.batch_size),
