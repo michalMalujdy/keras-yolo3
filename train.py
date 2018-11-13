@@ -13,7 +13,7 @@ from yolo3.model import preprocess_true_boxes, yolo_body, tiny_yolo_body, yolo_l
 from yolo3.utils import get_random_data
 from train_config import TrainConfig
 
-train_dir = './../train_data'
+train_dir = './train_data'
 
 def _main(config):
     annotation_path = train_dir + '/annotations.txt'
