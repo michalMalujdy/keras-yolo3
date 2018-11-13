@@ -11,6 +11,7 @@ from keras.callbacks import TensorBoard, ModelCheckpoint, ReduceLROnPlateau, Ear
 
 from yolo3.model import preprocess_true_boxes, yolo_body, tiny_yolo_body, yolo_loss
 from yolo3.utils import get_random_data
+from train_config import TrainConfig
 
 train_dir = './../train_data'
 
@@ -190,23 +191,6 @@ def data_generator_wrapper(annotation_lines, batch_size, input_shape, anchors, n
     if n==0 or batch_size<=0: return None
     return data_generator(annotation_lines, batch_size, input_shape, anchors, num_classes)
 
-
-def resolve_config_globals():
-    if 'optimizer' not in globals():
-        config.optimizer = 'Adam'
-
-    if 'learning_rate' not in globals():
-        config.learning_rate = '0.0001'
-
-    if 'epochs_count' not in globals():
-        config.epochs_count = '50'
-
-    if 'batch_size' not in globals():
-        config.batch_size = '32'
-
-    return config
-
-
 def resolve_optimizer(config):
     if config.optimizer is 'Adam':
         return Adam(lr = config.learning_rate)
@@ -216,5 +200,4 @@ def resolve_optimizer(config):
 
 
 if __name__ == '__main__':
-    config = resolve_config_globals()
-    _main(config)
+    _main(TrainConfig())
