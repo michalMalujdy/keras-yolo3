@@ -15,10 +15,7 @@ from yolo3.utils import get_random_data
 train_dir = './train_data'
 
 def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, batch_size = 32):
-    print('So it begins')
-    sys.stdout.flush()
-    sys.stdout.writelines('So it beginss')
-    sys.stdout.flush()
+    printConfig(optimizer_str, learning_rate, epochs_count, batch_size)
 
     annotation_path = train_dir + '/annotations.txt'
     log_dir = train_dir + '/logs'
@@ -29,8 +26,6 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
     anchors = get_anchors(anchors_path)
 
     input_shape = (416,416) # multiple of 32, hw
-
-    optimizer = resolve_optimizer(optimizer_str, learning_rate)
 
     is_tiny_version = len(anchors)==6 # default setting
     if is_tiny_version:
@@ -55,9 +50,10 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
     num_val = int(len(lines)*val_split)
     num_train = len(lines) - num_val
 
+    optimizer = resolve_optimizer(optimizer_str, learning_rate)
+
     # Train with frozen layers first, to get a stable loss.
     # Adjust num epochs to your dataset. This step is enough to obtain a not bad model.
-    printConfig(optimizer_str, learning_rate, epochs_count, batch_size)
     if True:
         model.compile(optimizer = optimizer, loss={
             # use custom yolo_loss Lambda layer.
