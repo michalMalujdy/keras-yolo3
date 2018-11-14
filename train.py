@@ -128,7 +128,7 @@ def create_model(input_shape, anchors, num_classes, load_pretrained=True, freeze
             # Freeze darknet53 body or freeze all but 3 output layers.
             num = (185, len(model_body.layers)-3)[freeze_body-1]
             for i in range(num): model_body.layers[i].trainable = False
-            print('Freeze the first {} layers of total {} layers.'.format(num, len(model_body.layers)))
+            print('aFreeze the first {} layers of total {} layers.'.format(num, len(model_body.layers)))
 
     model_loss = Lambda(yolo_loss, output_shape=(1,), name='yolo_loss',
         arguments={'anchors': anchors, 'num_classes': num_classes, 'ignore_thresh': 0.5})(
@@ -158,7 +158,7 @@ def create_tiny_model(input_shape, anchors, num_classes, load_pretrained=True, f
             # Freeze the darknet body or freeze all but 2 output layers.
             num = (20, len(model_body.layers)-2)[freeze_body-1]
             for i in range(num): model_body.layers[i].trainable = False
-            print('Freeze the first {} layers of total {} layers.'.format(num, len(model_body.layers)))
+            print('bFreeze the first {} layers of total {} layers.'.format(num, len(model_body.layers)))
 
     model_loss = Lambda(yolo_loss, output_shape=(1,), name='yolo_loss',
         arguments={'anchors': anchors, 'num_classes': num_classes, 'ignore_thresh': 0.7})(
