@@ -1,7 +1,7 @@
 """
 Retrain the YOLO model for your own dataset.
 """
-
+import sys
 import numpy as np
 import keras.backend as K
 from keras.layers import Input, Lambda
@@ -16,6 +16,9 @@ train_dir = './train_data'
 
 def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, batch_size = 32):
     print('So it begins')
+    sys.stdout.flush()
+    sys.stdout.writelines('So it beginss')
+    sys.stdout.flush()
 
     annotation_path = train_dir + '/annotations.txt'
     log_dir = train_dir + '/logs'
@@ -207,5 +210,4 @@ def printConfig(optimizer_str, learning_rate, epochs_count, batch_size):
     print('----------------------------------------------------------')
 
 if __name__ == '__main__':
-    print('s')
     _main()
