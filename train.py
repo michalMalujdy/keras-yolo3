@@ -15,7 +15,7 @@ from train_config import TrainConfig
 
 train_dir = './train_data'
 
-def _main(config):
+def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, batch_size = 32):
     annotation_path = train_dir + '/annotations.txt'
     log_dir = train_dir + '/logs'
     classes_path = train_dir +'/custom_classes.txt'
@@ -26,7 +26,7 @@ def _main(config):
 
     input_shape = (416,416) # multiple of 32, hw
 
-    optimizer = resolve_optimizer(config)
+    optimizer = resolve_optimizer(optimizer_str, learning_rate)
 
     is_tiny_version = len(anchors)==6 # default setting
     if is_tiny_version:
@@ -58,12 +58,12 @@ def _main(config):
             # use custom yolo_loss Lambda layer.
             'yolo_loss': lambda y_true, y_pred: y_pred})
 
-        print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, config.batch_size))
-        model.fit_generator(data_generator_wrapper(lines[:num_train], config.batch_size, input_shape, anchors, num_classes),
-                steps_per_epoch=max(1, num_train//config.batch_size),
-                validation_data=data_generator_wrapper(lines[num_train:], config.batch_size, input_shape, anchors, num_classes),
-                validation_steps=max(1, num_val//config.batch_size),
-                epochs=config.epochs_count,
+        print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, batch_size))
+        model.fit_generator(data_generator_wrapper(lines[:num_train], batch_size, input_shape, anchors, num_classes),
+                steps_per_epoch=max(1, num_train//batch_size),
+                validation_data=data_generator_wrapper(lines[num_train:], batch_size, input_shape, anchors, num_classes),
+                validation_steps=max(1, num_val//batch_size),
+                epochs=epochs_count,
                 initial_epoch=0,
                 callbacks=[logging, checkpoint])
         model.save_weights(train_dir + '/trained_weights_stage_1.h5')
@@ -189,13 +189,12 @@ def data_generator_wrapper(annotation_lines, batch_size, input_shape, anchors, n
     if n==0 or batch_size<=0: return None
     return data_generator(annotation_lines, batch_size, input_shape, anchors, num_classes)
 
-def resolve_optimizer(config):
-    if config.optimizer is 'Adam':
-        return Adam(lr = config.learning_rate)
-
-    if config.optimizer is 'RMSprop':
-        return RMSprop(lr = config.learning_rate)
+def resolve_optimizer(optimizer_str, learning_rate):
+    if optimizer_str is 'RMSprop':
+        return RMSprop(lr = learning_rate)
+    else:
+        return Adam(lr = learning_rate)
 
 
 if __name__ == '__main__':
-    _main(TrainConfig())
+    _main()
