@@ -15,7 +15,7 @@ from yolo3.utils import get_random_data
 train_dir = './train_data'
 
 def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, batch_size = 32):
-    printConfig(optimizer_str, learning_rate, epochs_count, batch_size)
+    print('So it begins')
 
     annotation_path = train_dir + '/annotations.txt'
     log_dir = train_dir + '/logs'
@@ -54,6 +54,7 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
 
     # Train with frozen layers first, to get a stable loss.
     # Adjust num epochs to your dataset. This step is enough to obtain a not bad model.
+    printConfig(optimizer_str, learning_rate, epochs_count, batch_size)
     if True:
         model.compile(optimizer = optimizer, loss={
             # use custom yolo_loss Lambda layer.
