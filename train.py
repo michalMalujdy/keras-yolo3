@@ -15,6 +15,8 @@ from yolo3.utils import get_random_data
 train_dir = './train_data'
 
 def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, batch_size = 32):
+    printConfig(optimizer_str, learning_rate, epochs_count, batch_size)
+
     annotation_path = train_dir + '/annotations.txt'
     log_dir = train_dir + '/logs'
     classes_path = train_dir +'/custom_classes.txt'
@@ -194,6 +196,14 @@ def resolve_optimizer(optimizer_str, learning_rate):
     else:
         return Adam(lr = learning_rate)
 
+def printConfig(optimizer_str, learning_rate, epochs_count, batch_size):
+    print('----------------------------------------------------------')
+    print('Set configuration:')
+    print('Optimizer: {}'.format(optimizer_str))
+    print('Learning rate: {}'.format(learning_rate))
+    print('Epochs count: {}'.format(epochs_count))
+    print('Batch size: {}'.format(batch_size))
+    print('----------------------------------------------------------')
 
 if __name__ == '__main__':
     _main()
