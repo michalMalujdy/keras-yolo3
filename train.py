@@ -207,4 +207,5 @@ def printConfig(optimizer_str, learning_rate, epochs_count, batch_size):
     print('----------------------------------------------------------')
 
 if __name__ == '__main__':
+    print('s')
     _main()

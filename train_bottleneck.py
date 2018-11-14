@@ -52,7 +52,7 @@ def _main():
             bottlenecks=bottleneck_model.predict_generator(data_generator_wrapper(lines, batch_size, input_shape, anchors, num_classes, random=False, verbose=True),
              steps=(len(lines)//batch_size)+1, max_queue_size=1)
             np.savez("bottlenecks.npz", bot0=bottlenecks[0], bot1=bottlenecks[1], bot2=bottlenecks[2])
-    
+
         # load bottleneck features from file
         dict_bot=np.load("bottlenecks.npz")
         bottlenecks_train=[dict_bot["bot0"][:num_train], dict_bot["bot1"][:num_train], dict_bot["bot2"][:num_train]]
@@ -70,7 +70,7 @@ def _main():
                 epochs=30,
                 initial_epoch=0, max_queue_size=1)
         model.save_weights(log_dir + 'trained_weights_stage_0.h5')
-        
+
         # train last layers with random augmented data
         model.compile(optimizer=Adam(lr=1e-3), loss={
             # use custom yolo_loss Lambda layer.
@@ -144,7 +144,7 @@ def create_model(input_shape, anchors, num_classes, load_pretrained=True, freeze
             # Freeze darknet53 body or freeze all but 3 output layers.
             num = (185, len(model_body.layers)-3)[freeze_body-1]
             for i in range(num): model_body.layers[i].trainable = False
-            print('Freeze the first {} layers of total {} layers.'.format(num, len(model_body.layers)))
+            print('cFreeze the first {} layers of total {} layers.'.format(num, len(model_body.layers)))
 
     # get output of second last layers and create bottleneck model of it
     out1=model_body.layers[246].output
@@ -153,7 +153,7 @@ def create_model(input_shape, anchors, num_classes, load_pretrained=True, freeze
     bottleneck_model = Model([model_body.input, *y_true], [out1, out2, out3])
 
     # create last layer model of last layers from yolo model
-    in0 = Input(shape=bottleneck_model.output[0].shape[1:].as_list()) 
+    in0 = Input(shape=bottleneck_model.output[0].shape[1:].as_list())
     in1 = Input(shape=bottleneck_model.output[1].shape[1:].as_list())
     in2 = Input(shape=bottleneck_model.output[2].shape[1:].as_list())
     last_out0=model_body.layers[249](in0)
@@ -165,7 +165,7 @@ def create_model(input_shape, anchors, num_classes, load_pretrained=True, freeze
         [*model_last.output, *y_true])
     last_layer_model = Model([in0,in1,in2, *y_true], model_loss_last)
 
-    
+
     model_loss = Lambda(yolo_loss, output_shape=(1,), name='yolo_loss',
         arguments={'anchors': anchors, 'num_classes': num_classes, 'ignore_thresh': 0.5})(
         [*model_body.output, *y_true])
