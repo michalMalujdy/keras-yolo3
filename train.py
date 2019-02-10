@@ -14,11 +14,17 @@ from yolo3.utils import get_random_data
 
 train_dir = './train_data'
 
-def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, batch_size = 32):
+def _main(
+    optimizer_str = 'Adam',
+    learning_rate = 0.0001,
+    epochs_count = 50,
+    batch_size = 32,
+    log_dir = '',
+    checkpoint_dir = ''):
+
     printConfig(optimizer_str, learning_rate, epochs_count, batch_size)
 
     annotation_path = train_dir + '/annotations.txt'
-    log_dir = train_dir + '/logs'
     classes_path = train_dir +'/custom_classes.txt'
     anchors_path = train_dir + '/yolo_anchors.txt'
     class_names = get_classes(classes_path)
@@ -35,9 +41,15 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
         model = create_model(input_shape, anchors, num_classes,
             freeze_body=2, weights_path = train_dir + '/yolo_v3_weights.h5') # make sure you know what you freeze
 
-    logging = TensorBoard(log_dir=log_dir)
-    checkpoint = ModelCheckpoint(log_dir + 'ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5',
-        monitor='val_loss', save_weights_only=True, save_best_only=True, period=3)
+    logging = TensorBoard(log_dir = log_dir)
+
+    checkpointCallback = ModelCheckpoint(
+        checkpoint_dir + '/' + 'ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5',
+        monitor='val_loss',
+        save_weights_only=False,
+        save_best_only=True,
+        period=1)
+
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, verbose=1)
     early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1)
 
@@ -66,7 +78,7 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
                 validation_steps=max(1, num_val//batch_size),
                 epochs=epochs_count,
                 initial_epoch=0,
-                callbacks=[logging, checkpoint])
+                callbacks=[logging, checkpointCallback])
         model.save_weights(train_dir + '/trained_weights_stage_1.h5')
 
     # Unfreeze and continue training, to fine-tune.
@@ -85,7 +97,7 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
             validation_steps=max(1, num_val//batch_size),
             epochs=100,
             initial_epoch=50,
-            callbacks=[logging, checkpoint, reduce_lr, early_stopping])
+            callbacks=[logging, checkpointCallback, reduce_lr, early_stopping])
         model.save_weights(train_dir + '/trained_weights_final.h5')
 
     # Further training if needed.
