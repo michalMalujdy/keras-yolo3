@@ -15,12 +15,12 @@ from yolo3.utils import get_random_data
 train_dir = './train_data'
 
 def _main(
-    optimizer_str = 'Adam',
-    learning_rate = 0.0001,
-    epochs_count = 50,
-    batch_size = 32,
-    log_dir = '',
-    checkpoint_dir = ''):
+optimizer_str = 'Adam',
+learning_rate = 0.0001,
+epochs_count = 50,
+batch_size = 32,
+log_dir = '',
+checkpoint_dir = ''):
 
     printConfig(optimizer_str, learning_rate, epochs_count, batch_size)
 
