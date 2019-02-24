@@ -40,7 +40,7 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
     checkpointCallback = ModelCheckpoint(
         checkpoint_dir + '/' + 'ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5',
         monitor='val_loss',
-        save_weights_only=False,
+        save_weights_only=True,
         save_best_only=True,
         period=1)
 
