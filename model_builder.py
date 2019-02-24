@@ -5,6 +5,18 @@ from keras.models import Model
 from yolo3.model import preprocess_true_boxes, yolo_body, tiny_yolo_body, yolo_loss
 from yolo3.utils import get_random_data
 
+import numpy as np
+
+def create_default_model(train_dir):
+    anchors_path = train_dir + '/yolo_anchors.txt'
+    classes_path = train_dir +'/custom_classes.txt'
+    anchors = get_anchors(anchors_path)
+    class_names = get_classes(classes_path)
+    num_classes = len(class_names)
+    input_shape = (416,416)
+
+    return create_model(input_shape, anchors, num_classes, freeze_body=2, weights_path = train_dir + '/yolo_v3_weights.h5')
+
 def create_model(input_shape, anchors, num_classes, load_pretrained=True, freeze_body=2,
             weights_path='model_data/yolo_weights.h5'):
     '''create the training model'''
@@ -35,6 +47,7 @@ def create_model(input_shape, anchors, num_classes, load_pretrained=True, freeze
 
     return model
 
+
 def create_tiny_model(input_shape, anchors, num_classes, load_pretrained=True, freeze_body=2,
             weights_path='model_data/tiny_yolo_weights.h5'):
     '''create the training model, for Tiny YOLOv3'''
@@ -64,3 +77,19 @@ def create_tiny_model(input_shape, anchors, num_classes, load_pretrained=True, f
     model = Model([model_body.input, *y_true], model_loss)
 
     return model
+
+
+def get_classes(classes_path):
+    '''loads the classes'''
+    with open(classes_path) as f:
+        class_names = f.readlines()
+    class_names = [c.strip() for c in class_names]
+    return class_names
+
+
+def get_anchors(anchors_path):
+    '''loads the anchors from a file'''
+    with open(anchors_path) as f:
+        anchors = f.readline()
+    anchors = [float(x) for x in anchors.split(',')]
+    return np.array(anchors).reshape(-1, 2)

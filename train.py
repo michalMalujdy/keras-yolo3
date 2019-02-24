@@ -9,7 +9,7 @@ from keras.models import Model
 from keras.optimizers import Adam, RMSprop
 from keras.callbacks import TensorBoard, ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 
-from model_builder import create_model, create_tiny_model
+from model_builder import create_model, create_tiny_model, get_classes, get_anchors
 from yolo3.model import preprocess_true_boxes, yolo_loss
 from yolo3.utils import get_random_data
 
@@ -97,20 +97,6 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
 
     # Further training if needed.
 
-
-def get_classes(classes_path):
-    '''loads the classes'''
-    with open(classes_path) as f:
-        class_names = f.readlines()
-    class_names = [c.strip() for c in class_names]
-    return class_names
-
-def get_anchors(anchors_path):
-    '''loads the anchors from a file'''
-    with open(anchors_path) as f:
-        anchors = f.readline()
-    anchors = [float(x) for x in anchors.split(',')]
-    return np.array(anchors).reshape(-1, 2)
 
 def data_generator(annotation_lines, batch_size, input_shape, anchors, num_classes):
     '''data generator for fit_generator'''
