@@ -15,7 +15,7 @@ def create_default_model(train_dir):
     num_classes = len(class_names)
     input_shape = (416,416)
 
-    return create_model(input_shape, anchors, num_classes, freeze_body=2, weights_path = train_dir + '/yolo_v3_weights.h5')
+    return create_model(input_shape, anchors, num_classes, freeze_body=0, weights_path = train_dir + '/yolo_v3_weights.h5')
 
 def create_model(input_shape, anchors, num_classes, load_pretrained=True, freeze_body=2,
             weights_path='model_data/yolo_weights.h5'):
