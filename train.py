@@ -19,7 +19,7 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
 
     printConfig(optimizer_str, learning_rate, epochs_count, batch_size)
 
-    annotation_path = train_dir + '/annotations.txt'
+    annotation_path = train_dir + '/annotations_drive.txt'
     classes_path = train_dir +'/custom_classes.txt'
     anchors_path = train_dir + '/yolo_anchors.txt'
     class_names = get_classes(classes_path)
