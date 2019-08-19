@@ -15,7 +15,7 @@ from yolo3.utils import get_random_data
 train_dir = './../train_data'
 
 def _main(config):
-    annotation_path = train_dir + '/annotations.txt'
+    annotation_path = train_dir + '/bookstore/annotations_drive.txt'
     log_dir = train_dir + '/logs'
     classes_path = train_dir +'/custom_classes.txt'
     anchors_path = train_dir + '/yolo_anchors.txt'
