@@ -61,7 +61,7 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
 
     # Train with frozen layers first, to get a stable loss.
     # Adjust num epochs to your dataset. This step is enough to obtain a not bad model.
-    if True:
+    if False:
         model.compile(optimizer = optimizer, loss={
             # use custom yolo_loss Lambda layer.
             'yolo_loss': lambda y_true, y_pred: y_pred})
@@ -78,7 +78,7 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
 
     # Unfreeze and continue training, to fine-tune.
     # Train longer if the result is not good.
-    if False:
+    if True:
         for i in range(len(model.layers)):
             model.layers[i].trainable = True
         model.compile(optimizer = optimizer, loss={'yolo_loss': lambda y_true, y_pred: y_pred}) # recompile to apply the change
@@ -90,8 +90,8 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, bat
             steps_per_epoch=max(1, num_train//batch_size),
             validation_data=data_generator_wrapper(lines[num_train:], batch_size, input_shape, anchors, num_classes),
             validation_steps=max(1, num_val//batch_size),
-            epochs=100,
-            initial_epoch=50,
+            epochs=epochs_count,
+            initial_epoch=0,
             callbacks=[logging, checkpointCallback, reduce_lr, early_stopping])
         model.save_weights(train_dir + '/trained_weights_final.h5')
 
