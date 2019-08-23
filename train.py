@@ -15,7 +15,11 @@ from yolo3.utils import get_random_data
 
 train_dir = './train_data'
 
+<<<<<<< HEAD
 def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 10, batch_size = 8, log_dir = '', checkpoint_dir = ''):
+=======
+def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, batch_size = 8, log_dir = '', checkpoint_dir = ''):
+>>>>>>> ecb356cd0c60152b04b309c6e792e8c9e45b8d26
 
     printConfig(optimizer_str, learning_rate, epochs_count, batch_size)
 
@@ -61,7 +65,7 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 10, bat
 
     # Train with frozen layers first, to get a stable loss.
     # Adjust num epochs to your dataset. This step is enough to obtain a not bad model.
-    if False:
+    if True:
         model.compile(optimizer = optimizer, loss={
             # use custom yolo_loss Lambda layer.
             'yolo_loss': lambda y_true, y_pred: y_pred})
@@ -78,7 +82,7 @@ def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 10, bat
 
     # Unfreeze and continue training, to fine-tune.
     # Train longer if the result is not good.
-    if True:
+    if False:
         for i in range(len(model.layers)):
             model.layers[i].trainable = True
         model.compile(optimizer = optimizer, loss={'yolo_loss': lambda y_true, y_pred: y_pred}) # recompile to apply the change
