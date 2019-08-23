@@ -15,11 +15,11 @@ from yolo3.utils import get_random_data
 
 train_dir = './train_data'
 
-def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 50, batch_size = 32, log_dir = '', checkpoint_dir = ''):
+def _main(optimizer_str = 'Adam', learning_rate = 0.0001, epochs_count = 10, batch_size = 8, log_dir = '', checkpoint_dir = ''):
 
     printConfig(optimizer_str, learning_rate, epochs_count, batch_size)
 
-    annotation_path = train_dir + '/annotations_drive.txt'
+    annotation_path = train_dir + '/annotations.txt'
     classes_path = train_dir +'/coco_classes.txt'
     anchors_path = train_dir + '/yolo_anchors.txt'
     class_names = get_classes(classes_path)
